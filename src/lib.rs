@@ -1,46 +1,35 @@
+#![warn(rust_2018_idioms)]
+
 mod heap;
 
-#[derive(Clone, Debug)]
-pub struct Point {
-    coords: [f64; 2],
+#[derive(Clone)]
+pub struct PointCloud<T> {
+    // stores all points
+    points: Vec<T>,
+
+    // return the distance given 2 ponints
+    dist_fn: fn(&T, &T) -> f64,
 }
 
-impl Point {
-    pub fn new(c: [f64; 2]) -> Point {
-        Point { coords: c }
-    }
-}
-
-fn dist_squared(p: &Point, q: &Point) -> f64 {
-    let mut sosq = 0.0;
-    for i in 0..p.coords.len() {
-        sosq += (p.coords[i] - q.coords[i]).powf(2.0)
-    }
-    return sosq.sqrt();
-}
-
-#[derive(Clone, Debug)]
-pub struct PointCloud {
-    points: Vec<Point>,
-}
-
-impl PointCloud {
-    pub fn new() -> PointCloud {
-        PointCloud { points: Vec::new() }
+impl<T> PointCloud<T> {
+    pub fn new(dist_fn: fn(&T, &T) -> f64) -> PointCloud<T> {
+        PointCloud {
+            points: Vec::new(),
+            dist_fn: dist_fn,
+        }
     }
 
-    pub fn add_point(&mut self, p: Point) {
+    pub fn add_point(&mut self, p: T) {
         self.points.push(p)
     }
 
-    pub fn get_nearest_n(&self, p: &Point, n: usize) -> (Vec<f64>, Point) {
+    pub fn get_nearest_n(&self, p: &T, n: usize) -> Vec<f64> {
         let mut h = heap::Heap::new(n);
-        let min_point = Point { coords: [0.0, 0.0] };
         for i in 0..self.points.len() {
-            let d = dist_squared(&self.points[i], p);
+            let d = (self.dist_fn)(&self.points[i], p);
             h.insert(d);
         }
-        (h.get_elements(), min_point)
+        h.get_elements()
     }
 
     pub fn len(&self) -> usize {
