@@ -4,10 +4,10 @@ pub struct Heap {
 }
 
 impl Heap {
-    pub fn new(capacity: usize) -> Heap {
-        Heap {
+    pub fn new(capacity: usize) -> Self {
+        Self {
             data: vec![0.0],
-            capacity: capacity,
+            capacity,
         }
     }
 
@@ -61,9 +61,8 @@ impl Heap {
         }
 
         // send the last element to the top
-        match self.data.pop() {
-            Some(x) => self.data[1] = x,
-            None => (),
+        if let Some(x) = self.data.pop() {
+            self.data[1] = x;
         }
         // now rebalance
         let mut idx = 1;
