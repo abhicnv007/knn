@@ -1,4 +1,4 @@
-use crate::heap;
+mod heap;
 
 #[derive(Clone, Debug)]
 pub struct Point {
@@ -37,7 +37,6 @@ impl PointCloud {
         let mut h = heap::Heap::new(n);
         let min_point = Point { coords: [0.0, 0.0] };
         for i in 0..self.points.len() {
-            println!("{}", i);
             let d = dist_squared(&self.points[i], p);
             h.insert(d);
         }
@@ -46,30 +45,5 @@ impl PointCloud {
 
     pub fn len(&self) -> usize {
         self.points.len()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_add_point() {
-        let mut pc = PointCloud::new();
-        pc.add_point(Point { coords: [1.0, 2.0] });
-        pc.add_point(Point { coords: [2.5, 6.5] });
-        assert_eq!(pc.len(), 2);
-    }
-
-    #[test]
-    fn test_get_nearest_n() {
-        let mut pc = PointCloud::new();
-        pc.add_point(Point { coords: [2.0, 2.0] });
-        pc.add_point(Point { coords: [2.0, 1.0] });
-        pc.add_point(Point { coords: [3.0, 1.0] });
-
-        let (d, p) = pc.get_nearest_n(&Point { coords: [1.0, 1.0] }, 1);
-        // assert that it returns n points
-        assert_eq!(d.len(), 1);
-        assert_eq!(d[0], 1.0);
     }
 }
