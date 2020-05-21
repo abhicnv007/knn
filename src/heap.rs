@@ -38,6 +38,7 @@ impl Heap {
         sorted
     }
 
+    //TODO: handle error if empty
     pub fn get_max(&self) -> f64 {
         self.data[1]
     }
@@ -54,6 +55,11 @@ impl Heap {
     }
     fn extract_max(&mut self) -> f64 {
         let m = self.get_max();
+        if self.data.len() <= 2 {
+            self.data.pop();
+            return m;
+        }
+
         // send the last element to the top
         match self.data.pop() {
             Some(x) => self.data[1] = x,
@@ -62,10 +68,10 @@ impl Heap {
         // now rebalance
         let mut idx = 1;
         let mut child = idx * 2;
-        while (child < self.capacity && self.data[idx] < self.data[child])
-            || (child + 1 < self.capacity && self.data[idx] < self.data[child + 1])
+        while (child < self.len() && self.data[idx] < self.data[child])
+            || (child + 1 < self.len() && self.data[idx] < self.data[child + 1])
         {
-            if (child + 1 < self.capacity) && (self.data[child + 1] > self.data[child]) {
+            if (child + 1 < self.len()) && (self.data[child + 1] > self.data[child]) {
                 child = child + 1;
             }
             self.data.swap(idx, child);
@@ -103,16 +109,20 @@ mod tests {
     #[test]
     fn test_extract_max() {
         let mut h = Heap::new(10);
-        let v = vec![
-            69.42, 34.26, 72.53, 14.69, 29.24, 89.00, 1.72, 94.44, 30.46, 81.18,
-        ];
+
+        h.insert(42.0);
+        assert_eq!(h.len(), 1);
+        assert_eq!(h.extract_max(), 42.0);
+        assert_eq!(h.len(), 0);
+
+        let v = vec![69.42, 34.26, 72.53, 14.69, 29.24, 89.00, 1.72, 94.44, 30.46];
         for i in v {
             h.insert(i);
         }
 
-        assert_eq!(h.len(), 10);
+        assert_eq!(h.len(), 9);
         assert_eq!(h.extract_max(), 94.44);
-        assert_eq!(h.len(), 9)
+        assert_eq!(h.len(), 8);
     }
     #[test]
     fn test_get_max() {
