@@ -1,12 +1,12 @@
-pub struct Heap {
-    data: Vec<f64>,
+pub struct Heap<'a, T> {
+    data: Vec<Option<(f64, &'a T)>>,
     capacity: usize,
 }
 
-impl Heap {
+impl<'a, T> Heap<'a, T> {
     pub fn new(capacity: usize) -> Self {
         Self {
-            data: vec![0.0],
+            data: vec![None],
             capacity,
         }
     }
@@ -15,45 +15,60 @@ impl Heap {
         self.data.len() - 1
     }
 
-    pub fn insert(&mut self, f: f64) {
+    pub fn insert(&mut self, f: f64, item: &'a T) {
         if self.len() == 0 {
-            self.data.push(f);
+            self.data.push(Some((f, item)));
             return;
-        }
-        if self.len() < self.capacity {
-            self.data.push(f);
+        } else if self.len() < self.capacity {
+            self.data.push(Some((f, item)));
             self.heapify();
             return;
         }
-        if self.get_max() > f {
-            self.extract_max();
-            self.data.push(f);
-            self.heapify();
+        match self.get_max() {
+            Some(m) => {
+                if m > f {
+                    self.extract_max();
+                    self.data.push(Some((f, item)));
+                    self.heapify();
+                }
+            }
+            None => (),
         }
     }
 
-    pub fn get_elements(&self) -> Vec<f64> {
-        let mut sorted = self.data[1..].to_vec().clone();
-        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    pub fn get_elements(&self) -> Vec<(f64, &T)> {
+        // let mut sorted = self.data[1..].to_vec().clone();
+        let mut sorted = Vec::new();
+        for i in 1..self.len() + 1 {
+            sorted.push(self.data[i].unwrap())
+        }
+        sorted.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
         sorted
     }
 
-    //TODO: handle error if empty
-    pub fn get_max(&self) -> f64 {
-        self.data[1]
+    pub fn get_max(&self) -> Option<f64> {
+        if self.len() == 0 {
+            None
+        } else {
+            Some(self.data[1].unwrap().0)
+        }
+    }
+
+    fn at_idx(&self, idx: usize) -> f64 {
+        self.data[idx].unwrap().0
     }
 
     fn heapify(&mut self) {
         let parent = |x: usize| -> usize { x / 2 as usize };
         let mut l = self.data.len() - 1;
         let mut p = parent(l);
-        while p > 0 && self.data[p] < self.data[l] {
+        while p > 0 && self.at_idx(p) < self.at_idx(l) {
             self.data.swap(l, p);
             l = p;
             p = parent(l);
         }
     }
-    fn extract_max(&mut self) -> f64 {
+    fn extract_max(&mut self) -> Option<f64> {
         let m = self.get_max();
         if self.data.len() <= 2 {
             self.data.pop();
@@ -67,10 +82,10 @@ impl Heap {
         // now rebalance
         let mut idx = 1;
         let mut child = idx * 2;
-        while (child < self.len() && self.data[idx] < self.data[child])
-            || (child + 1 < self.len() && self.data[idx] < self.data[child + 1])
+        while (child < self.len() && self.at_idx(idx) < self.at_idx(child))
+            || (child + 1 < self.len() && self.at_idx(idx) < self.at_idx(child + 1))
         {
-            if (child + 1 < self.len()) && (self.data[child + 1] > self.data[child]) {
+            if (child + 1 < self.len()) && (self.at_idx(child + 1) > self.at_idx(child)) {
                 child = child + 1;
             }
             self.data.swap(idx, child);
@@ -88,7 +103,7 @@ mod tests {
     fn test_insert() {
         let mut h = Heap::new(10);
         for i in 0..6 {
-            h.insert(i as f64);
+            h.insert(i as f64, &0);
         }
 
         assert_eq!(h.len(), 6);
@@ -97,32 +112,42 @@ mod tests {
     #[test]
     fn test_get_elements() {
         let mut h = Heap::new(10);
-        h.insert(7.8);
-        h.insert(98.78);
-        h.insert(0.0);
-        h.insert(1.0);
+        h.insert(7.8, &0);
+        h.insert(98.78, &0);
+        h.insert(0.0, &0);
+        h.insert(1.0, &0);
 
-        assert_eq!(h.get_elements(), vec![0.0, 1.0, 7.8, 98.78]);
+        assert_eq!(
+            h.get_elements(),
+            vec![(0.0, &0), (1.0, &0), (7.8, &0), (98.78, &0)]
+        );
     }
 
     #[test]
     fn test_extract_max() {
         let mut h = Heap::new(10);
 
-        h.insert(42.0);
+        h.insert(42.0, &0);
         assert_eq!(h.len(), 1);
-        assert_eq!(h.extract_max(), 42.0);
+        match h.extract_max() {
+            Some(x) => assert_eq!(x, 42.0),
+            None => panic!(),
+        }
         assert_eq!(h.len(), 0);
 
         let v = vec![69.42, 34.26, 72.53, 14.69, 29.24, 89.00, 1.72, 94.44, 30.46];
         for i in v {
-            h.insert(i);
+            h.insert(i, &0);
         }
 
         assert_eq!(h.len(), 9);
-        assert_eq!(h.extract_max(), 94.44);
+        match h.extract_max() {
+            Some(x) => assert_eq!(x, 94.44),
+            None => panic!(),
+        }
         assert_eq!(h.len(), 8);
     }
+
     #[test]
     fn test_get_max() {
         let mut h = Heap::new(10);
@@ -130,9 +155,12 @@ mod tests {
             69.42, 34.26, 72.53, 14.69, 29.24, 89.00, 1.72, 94.44, 30.46, 81.18,
         ];
         for i in v {
-            h.insert(i);
+            h.insert(i, &0);
         }
 
-        assert_eq!(h.get_max(), 94.44)
+        match h.get_max() {
+            Some(x) => assert_eq!(x, 94.44),
+            None => panic!(),
+        }
     }
 }
