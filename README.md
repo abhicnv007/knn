@@ -10,7 +10,7 @@ A library to find nearest neighbours in rust.
 extern crate pointcloud;
 use pointcloud::PointCloud;
 
-fn manhatten(p: &[f64;2], q: &[f64;2]) -> f64 {
+fn manhattan(p: &[f64;2], q: &[f64;2]) -> f64 {
     let mut d = 0.0;
     for i in 0..p.len() {
         d += (p[i] - q[i]).abs();
@@ -19,7 +19,7 @@ fn manhatten(p: &[f64;2], q: &[f64;2]) -> f64 {
 }
 
 fn main() {
-    let mut pc = PointCloud::new(manhatten);
+    let mut pc = PointCloud::new(manhattan);
     let coords = vec![[1.0, 1.0], [2.0, 2.0], [10.0, 5.0], [11.0, 15.0]];
     for i in 0..coords.len() {
         pc.add_point(&coords[i]);
