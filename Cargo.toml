@@ -1,12 +1,13 @@
 [package]
 name = "knn"
-version = "0.1.1"
+version = "0.1.3"
 authors = ["Abhishek N V <abhicnv007@gmail.com>"]
 edition = "2018"
 description = "A library to compute KNN."
 license = "MIT"
 
 readme = "README.md"
+documentation = "https://docs.rs/knn"
 homepage = "https://github.com/abhicnv007/knn"
 repository = "https://github.com/abhicnv007/knn.git"
 
