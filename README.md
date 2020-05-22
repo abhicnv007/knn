@@ -6,19 +6,21 @@ A library to find nearest neighbours in rust.
 
 ## Usage
 
-```rust
-extern crate pointcloud;
-use pointcloud::PointCloud;
+Add this to your `Cargo.toml`
 
-fn manhattan(p: &[f64;2], q: &[f64;2]) -> f64 {
-    let mut d = 0.0;
-    for i in 0..p.len() {
-        d += (p[i] - q[i]).abs();
-    }
-    d
-}
+```toml
+[dependencies]
+knn = "0.1.1"
+```
+
+and use like this
+
+```rust
+extern crate knn;
+use knn::PointCloud;
 
 fn main() {
+    let manhattan = |p: &[f64;2], q: &[f64;2]| {(q[0] - p[0]).abs() + (q[1] - p[1]).abs()};
     let mut pc = PointCloud::new(manhattan);
     let coords = vec![[1.0, 1.0], [2.0, 2.0], [10.0, 5.0], [11.0, 15.0]];
     for i in 0..coords.len() {
