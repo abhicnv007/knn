@@ -1,10 +1,10 @@
 #![warn(rust_2018_idioms)]
 #![warn(missing_docs)]
 
-//! # PointCloud
+//! # KNN
 //!
-//! `pointcloud` provides for fast method of finding exact k nearest neighbours
-//! for higher dimensional data.
+//! `knn` provides for fast method of finding exact k nearest neighbours
+//! for higher dimensional data. Also supports custom distance function.
 
 mod heap;
 
@@ -26,8 +26,8 @@ impl<'a, T> PointCloud<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// extern crate pointcloud;
-    /// use pointcloud::PointCloud;
+    /// extern crate knn;
+    /// use knn::PointCloud;
     /// let manhattan_dist = |p: &[f64;2], q: &[f64;2]| -> f64 {(p[0] - q[0]).abs() + (p[1] - q[1]).abs()};
     /// let pc = PointCloud::new(manhattan_dist);
     /// ```
@@ -44,8 +44,8 @@ impl<'a, T> PointCloud<'a, T> {
     ///
     /// # Examples
     /// ```
-    /// extern crate pointcloud;
-    /// use pointcloud::PointCloud;
+    /// extern crate knn;
+    /// use knn::PointCloud;
     /// let dummy_dist = |p: &[f64;2], q: &[f64;2]| -> f64 {0.0};
     /// let mut pc = PointCloud::new(dummy_dist);
     /// let p = [1.89, 5.63];
@@ -61,8 +61,8 @@ impl<'a, T> PointCloud<'a, T> {
     ///
     /// # Example
     /// ```
-    /// extern crate pointcloud;
-    /// use pointcloud::PointCloud;
+    /// extern crate knn;
+    /// use knn::PointCloud;
     /// let manhattan_dist = |p: &[f64;2], q: &[f64;2]| -> f64 {(p[0] - q[0]).abs() + (p[1] - q[1]).abs()};
     /// let mut pc = PointCloud::new(manhattan_dist);
     /// let points = vec![[1.0, 1.0], [2.0, 2.0], [3.0, 2.0]];
@@ -89,8 +89,8 @@ impl<'a, T> PointCloud<'a, T> {
     /// Get the len / number of objects in PointCloud
     /// Example:
     /// ```
-    /// extern crate pointcloud;
-    /// use pointcloud::PointCloud;
+    /// extern crate knn;
+    /// use knn::PointCloud;
     /// let manhattan_dist = |p: &[f64;2], q: &[f64;2]| -> f64 {(p[0] - q[0]).abs() + (p[1] - q[1]).abs()};
     /// let mut pc = PointCloud::new(manhattan_dist);
     /// let points = vec![[1.0, 1.0], [2.0, 2.0], [3.0, 2.0]];

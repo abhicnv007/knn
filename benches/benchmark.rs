@@ -3,8 +3,8 @@ use criterion::{criterion_group, criterion_main, Criterion};
 extern crate rand;
 use rand::Rng;
 
-extern crate pointcloud;
-use pointcloud::PointCloud;
+extern crate knn;
+use knn::PointCloud;
 
 #[derive(Clone, Debug)]
 pub struct Point {

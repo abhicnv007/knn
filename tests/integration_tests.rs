@@ -1,6 +1,6 @@
-extern crate pointcloud;
+extern crate knn;
 
-use pointcloud::PointCloud;
+use knn::PointCloud;
 
 #[derive(Clone, Debug)]
 pub struct Point {
