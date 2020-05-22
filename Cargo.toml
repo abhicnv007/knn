@@ -1,18 +1,20 @@
 [package]
 name = "knn"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Abhishek N V <abhicnv007@gmail.com>"]
 edition = "2018"
 description = "A library to compute KNN."
 license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+readme = "README.md"
+homepage = "https://github.com/abhicnv007/knn"
+repository = "https://github.com/abhicnv007/knn.git"
 
 [dependencies]
-rand = "0.7.3"
 
 [dev-dependencies]
 criterion = "0.3"
+rand = "0.7.3"
 
 [[bench]]
 name = "benchmark"
