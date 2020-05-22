@@ -10,7 +10,7 @@ Add this to your `Cargo.toml`
 
 ```toml
 [dependencies]
-knn = "0.1.2"
+knn = "0.1.3"
 ```
 
 and use like this

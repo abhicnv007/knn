@@ -1,6 +1,6 @@
 [package]
 name = "knn"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Abhishek N V <abhicnv007@gmail.com>"]
 edition = "2018"
 description = "A library to compute KNN."
