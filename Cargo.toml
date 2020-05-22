@@ -7,6 +7,7 @@ description = "A library to compute KNN."
 license = "MIT"
 
 readme = "README.md"
+documentation = "https://docs.rs/knn"
 homepage = "https://github.com/abhicnv007/knn"
 repository = "https://github.com/abhicnv007/knn.git"
 
