@@ -48,14 +48,14 @@ fn test_get_nearest_n() {
     }
 
     let p = Point::new([1.0, 1.0]);
-    let d = pc.get_nearest_n(&p, 1);
+    let d = pc.get_nearest_k(&p, 1);
     // assert that it returns n points
     assert_eq!(d.len(), 1);
     println!("{:?}", d);
     assert_eq!(d[0].0, 1.0);
     assert_eq!(d[0].1 as *const _, &points[1]);
 
-    let d = pc.get_nearest_n(&p, 2);
+    let d = pc.get_nearest_k(&p, 2);
 
     let expected = vec![(1.0, &points[1]), (2.0f64.sqrt(), &points[0])];
     assert_eq!(d.len(), 2);
