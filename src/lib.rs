@@ -1,9 +1,16 @@
 #![warn(rust_2018_idioms)]
-// #![warn(missing_docs)]
+#![warn(missing_docs)]
+
+//! # PointCloud
+//!
+//! `pointcloud` provides for fast method of finding exact k nearest neighbours
+//! for higher dimensional data.
 
 mod heap;
 
 #[derive(Clone)]
+/// The core datastructure of the package.
+/// Stores the points and the distance function.
 pub struct PointCloud<'a, T> {
     // stores all points
     points: Vec<&'a T>,
