@@ -10,7 +10,7 @@ Add this to your `Cargo.toml`
 
 ```toml
 [dependencies]
-knn = "0.1.1"
+knn = "0.1.2"
 ```
 
 and use like this
@@ -34,4 +34,4 @@ fn main() {
 }
 ```
 
-For updated and detailed docs refer [here](https://docs.rs/knn/0.1.1/knn/)
+For updated and detailed docs refer [here](https://docs.rs/knn/)
