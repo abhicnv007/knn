@@ -3,8 +3,8 @@ use criterion::{criterion_group, criterion_main, Criterion};
 extern crate rand;
 use rand::Rng;
 
-extern crate pointcloud;
-use pointcloud::PointCloud;
+extern crate knn;
+use knn::PointCloud;
 
 #[derive(Clone, Debug)]
 pub struct Point {
@@ -40,10 +40,13 @@ fn benchmark_pointcloud(c: &mut Criterion) {
     });
 
     c.bench_function(
-        "PointCloud: get nearest 10 neighbours out of 1 million",
+        "PointCloud: get nearest 100 neighbours out of 1 million",
         |b| {
             // create a pointcloud with 1000 elements
-            let mut pc = PointCloud::new(euclidean);
+            let manhattan_dist = |p: &Point, q: &Point| -> f64 {
+                (p.coords[0] - q.coords[0]).abs() + (p.coords[1] - q.coords[1]).abs()
+            };
+            let mut pc = PointCloud::new(manhattan_dist);
             let points: Vec<Point> = (0..1_000_000)
                 .map(|_| Point::new([rand::thread_rng().gen(), rand::thread_rng().gen()]))
                 .collect();
@@ -51,7 +54,7 @@ fn benchmark_pointcloud(c: &mut Criterion) {
                 pc.add_point(p);
             }
 
-            b.iter(|| pc.get_nearest_n(&Point::new([100.0, 100.0]), 10));
+            b.iter(|| pc.get_nearest_k(&Point::new([100.0, 100.0]), 100));
         },
     );
 }
