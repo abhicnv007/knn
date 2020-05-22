@@ -33,3 +33,5 @@ fn main() {
     // [(0.20000000000000018, [2.0, 2.0]), (2.2, [1.0, 1.0])]
 }
 ```
+
+For updated and detailed docs refer [here](https://docs.rs/knn/0.1.1/knn/)
